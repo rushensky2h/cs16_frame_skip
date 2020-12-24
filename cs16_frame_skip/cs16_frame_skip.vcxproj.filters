@@ -7,9 +7,7 @@
     <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\detours.h">
-      <Filter>src</Filter>
-    </ClInclude>
+    <ClInclude Include="src\MinHook.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -23,8 +21,5 @@
     <Filter Include="src">
       <UniqueIdentifier>{bf0b9dd5-e1ec-4d27-a067-14bcb21864f0}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="detours.lib" />
   </ItemGroup>
 </Project>
