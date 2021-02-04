@@ -5,7 +5,7 @@
 #include <windows.h>
 
 #include "MinHook.h"
-#pragma comment( lib, "detours.lib" )
+#pragma comment( lib, "MinHook.lib" )
 
 struct ModuleInfo
 {
