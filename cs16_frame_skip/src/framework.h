@@ -5,7 +5,7 @@
 #include <windows.h>
 
 #include "MinHook.h"
-#pragma comment( lib, "MinHook.lib" )
+#pragma comment(lib, "MinHook.lib")
 
 struct ModuleInfo
 {
@@ -15,8 +15,8 @@ struct ModuleInfo
 	uintptr_t	end;
 };
 
-typedef int( *SCR_UpdateScreen_t )( );
+typedef int(*SCR_UpdateScreen_t)();
 extern SCR_UpdateScreen_t g_pSCR_UpdateScreen;
 
-bool FindModuleByName( const char *name, ModuleInfo *module );
-DWORD FindPattern( PCSTR pattern, PCSTR mask, DWORD start, DWORD end, DWORD offset = 0 );
+bool FindModuleByName(const char *name, ModuleInfo *module);
+DWORD FindPattern(PCSTR pattern, PCSTR mask, DWORD start, DWORD end, DWORD offset = 0);
