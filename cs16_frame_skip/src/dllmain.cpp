@@ -2,14 +2,18 @@
 #include "pch.h"
 
 /*
-build 4554: 
-		ptr: \xA1\xFF\xFF\xFF\xFF\x83\xEC\x10\x56\x33\xF6\x3B\xC6\x0F\x85
-		mask: x????xxxxxxxxxx
+SCR_UpdateScreen:
+{
+	build 4554: 
+		ida ptr: A1 ? ? ? ? 83 EC 10 56 33 F6 3B C6 0F 85
+		code ptr: \xA1\xFF\xFF\xFF\xFF\x83\xEC\x10\x56\x33\xF6\x3B\xC6\x0F\x85
+		code mask: x????xxxxxxxxxx
 
-last steam build 8684:
-		ptr: \x55\x8B\xEC\x83\xEC\x10\xA1\xFF\xFF\xFF\xFF\x56\x33\xF6\x3B\xC6\x0F\x85\xFF\xFF\xFF\xFF
-		mask: xxxxxxx????xxxxxxx?????
-
+	last steam build 8684:
+		ida ptr: 55 8B EC 83 EC 10 A1 ? ? ? ? 56 33 F6 3B C6 0F 85 ? ? ? ?
+		code ptr: \x55\x8B\xEC\x83\xEC\x10\xA1\xFF\xFF\xFF\xFF\x56\x33\xF6\x3B\xC6\x0F\x85\xFF\xFF\xFF\xFF
+		code mask: xxxxxxx????xxxxxxx?????
+}
 */
 
 ModuleInfo HW;
@@ -17,24 +21,22 @@ SCR_UpdateScreen_t g_pSCR_UpdateScreen;
 
 void hkSCR_UpdateScreen()
 {
-	static int m_iCount = 0;
+	static int m_nCount = 0;
 
 	// We skip frames as much as possible to increase the indicator
 	// The higher the value, the fewer frames
-	const int m_iSkipFrames = 1;
+	const int m_nSkipFrames = 1;
 
-	if (m_iCount <= m_iSkipFrames)
-		m_iCount++;
+	if (m_nCount <= m_nSkipFrames)
+		m_nCount++;
 
-	if (m_iCount > m_iSkipFrames)
+	if (m_nCount > m_nSkipFrames)
 	{
-		m_iCount = 0;
+		m_nCount  = 0;
 		return;
 	}
 
-	auto oSCR_UpdateScreen = (SCR_UpdateScreen_t) g_pSCR_UpdateScreen;
-
-	oSCR_UpdateScreen();
+	g_pSCR_UpdateScreen();
 }
 
 void ProcessAttach(HMODULE hModule)
@@ -45,15 +47,16 @@ void ProcessAttach(HMODULE hModule)
 			return;
 
 		// Build: 8684
-		g_pSCR_UpdateScreen = (( SCR_UpdateScreen_t)FindPattern("\xA1\xFF\xFF\xFF\xFF\x83\xEC\x10\x56\x33\xF6\x3B\xC6\x0F\x85",  "x????xxxxxxxxxx", HW.base, HW.end));
+		g_pSCR_UpdateScreen = (SCR_UpdateScreen_t)FindPattern("\xA1\xFF\xFF\xFF\xFF\x83\xEC\x10\x56\x33\xF6\x3B\xC6\x0F\x85", "x????xxxxxxxxxx", HW.base, HW.end);
 
-		MH_Initialize();
+		if (MH_Initialize() != MH_OK)
+			return;
 
-		if (g_pSCR_UpdateScreen)
-		{
-			MH_CreateHook((LPVOID)g_pSCR_UpdateScreen, hkSCR_UpdateScreen, (LPVOID*)&g_pSCR_UpdateScreen);
-			MH_EnableHook((LPVOID)g_pSCR_UpdateScreen);
-		}
+		if (!g_pSCR_UpdateScreen)
+			return;
+		
+		MH_CreateHook((LPVOID)g_pSCR_UpdateScreen, hkSCR_UpdateScreen, (LPVOID*)&g_pSCR_UpdateScreen);
+		MH_EnableHook((LPVOID)g_pSCR_UpdateScreen);
 	}
 }
 
@@ -61,21 +64,21 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 {
 	switch (ul_reason_for_call)
 	{
-	case DLL_PROCESS_ATTACH:
-		ProcessAttach(hModule);
-		break;
+		case DLL_PROCESS_ATTACH:
+			ProcessAttach(hModule);
+			break;
 	}
 	return TRUE;
 }
 
-bool FindModuleByName(const char *name, ModuleInfo *module)
+bool FindModuleByName(const char* name, ModuleInfo* module)
 {
 	if (strlen(name) == 0)
 		return false;
 
 	HMODULE hModuleDll = GetModuleHandleA(name);
 
-	if ( !hModuleDll )
+	if (!hModuleDll)
 		return false;
 
 	if (hModuleDll == INVALID_HANDLE_VALUE)
@@ -92,8 +95,8 @@ bool FindModuleByName(const char *name, ModuleInfo *module)
 	if (!mem.AllocationBase)
 		return false;
 
-	IMAGE_DOS_HEADER *dos = (IMAGE_DOS_HEADER*)mem.AllocationBase;
-	IMAGE_NT_HEADERS *pe = (IMAGE_NT_HEADERS*)((uintptr_t)dos + (uintptr_t)dos->e_lfanew);
+	IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)mem.AllocationBase;
+	IMAGE_NT_HEADERS* pe = (IMAGE_NT_HEADERS*)((uintptr_t)dos + (uintptr_t)dos->e_lfanew);
 
 	if (pe->Signature != IMAGE_NT_SIGNATURE)
 		return false;
@@ -125,7 +128,7 @@ DWORD FindPattern(PCSTR pattern, PCSTR mask, DWORD start, DWORD end, DWORD offse
 
 		for (size_t idx = 0; idx < patternLength; ++idx)
 		{
-			if (mask[idx] == 'x' && pattern[idx] != *(PCHAR) (i + idx))
+			if (mask[idx] == 'x' && pattern[idx] != *(PCHAR)(i + idx))
 			{
 				found = false;
 				break;

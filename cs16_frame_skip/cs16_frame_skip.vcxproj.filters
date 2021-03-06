@@ -22,4 +22,7 @@
       <UniqueIdentifier>{bf0b9dd5-e1ec-4d27-a067-14bcb21864f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\MinHook.lib" />
+  </ItemGroup>
 </Project>

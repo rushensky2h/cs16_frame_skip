@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+*.db-shm
+.vs/cs16_frame_skip/v16/.suo
+*.db
+*.recipe
+*.log
+*.tlog
+*.ipch
+*.pdb
+*.idb
+*.ilk
+*.iobj
+*.ini
+*.ipdb
+*.enc

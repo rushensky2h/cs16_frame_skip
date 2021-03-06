@@ -1,8 +1,10 @@
 #pragma once
 
-#if !( defined _M_IX86  ) && !( defined _M_X64  ) && !( defined __i386__  ) && !( defined __x86_64__  )
+#if !(defined _M_IX86) && !(defined _M_X64) && !(defined __i386__ ) && !( defined __x86_64__ )
 #error MinHook only supports x64 and x86 systems
 #endif
+
+#define MH_ALL_HOOKS NULL
 
 typedef enum MH_STATUS
 {
@@ -60,11 +62,11 @@ extern "C"
 #endif
 
 	// Initializing the Winsock library. You should only call this function ONCE at the beginning of your program
-	MH_STATUS WINAPI MH_Initialize( VOID );
+	MH_STATUS WINAPI MH_Initialize(VOID);
 
 	// Initialize the Winsock library. You must call this function EXACTLY
 	// ONCE at the end of your program.
-	MH_STATUS WINAPI MH_Uninitialize( VOID );
+	MH_STATUS WINAPI MH_Uninitialize(VOID);
 
 	// Creates a hook for the specified target function in the disabled state.
 	// Parameters:
@@ -75,7 +77,7 @@ extern "C"
 	// ppOriginal [out] Pointer to the trampoline function that will
 	// used to call the original target function.
 	// This parameter can be NULL.
-	MH_STATUS WINAPI MH_CreateHook( LPVOID pTarget, LPVOID pDetour, LPVOID *ppOriginal );
+	MH_STATUS WINAPI MH_CreateHook(LPVOID pTarget, LPVOID pDetour, LPVOID* ppOriginal);
 
 	// Creates a hook for the specified API function in the disabled state.
 	// Parameters:
@@ -88,7 +90,7 @@ extern "C"
 	// ppOriginal [out] Pointer to the trampoline function that will
 	// used to call the original target function.
 	// This parameter can be NULL.
-	MH_STATUS WINAPI MH_CreateHookApi( LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, LPVOID *ppOriginal );
+	MH_STATUS WINAPI MH_CreateHookApi(LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, LPVOID* ppOriginal);
 
 	// Creates a hook for the specified API function in the disabled state.
 	// Parameters:
@@ -104,46 +106,46 @@ extern "C"
 	// ppTarget [out] Pointer to the target function to be used
 	// with other functions.
 	// This parameter can be NULL.
-	MH_STATUS WINAPI MH_CreateHookApiEx( LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, LPVOID *ppOriginal, LPVOID *ppTarget );
+	MH_STATUS WINAPI MH_CreateHookApiEx(LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, LPVOID* ppOriginal, LPVOID* ppTarget);
 
 	// Deletes an already created hook.
 	// Parameters:
 	// pTarget[in] Pointer to the target function.
-	MH_STATUS WINAPI MH_RemoveHook( LPVOID pTarget );
+	MH_STATUS WINAPI MH_RemoveHook(LPVOID pTarget);
 
 	// Enables an already created hook.
 	// Parameters:
 	// pTarget[in] Pointer to the target function.
 	// If this parameter is MH_ALL_HOOKS, all created hooks
 	// enabled at a time.
-	MH_STATUS WINAPI MH_EnableHook( LPVOID pTarget );
+	MH_STATUS WINAPI MH_EnableHook(LPVOID pTarget);
 
 	// Disables an already created hook.
 	// Parameters:
 	// pTarget[in] Pointer to the target function.
 	// If this parameter is MH_ALL_HOOKS, all created hooks
 	// disabled at a time.
-	MH_STATUS WINAPI MH_DisableHook( LPVOID pTarget );
+	MH_STATUS WINAPI MH_DisableHook(LPVOID pTarget);
 
 	// Queues for enabling an already created hook.
 	// Parameters:
 	// pTarget[in] Pointer to the target function.
 	// If this parameter is MH_ALL_HOOKS, all created hooks
 	// queued for inclusion
-	MH_STATUS WINAPI MH_QueueEnableHook( LPVOID pTarget );
+	MH_STATUS WINAPI MH_QueueEnableHook(LPVOID pTarget);
 
 	// Queues for disabling an already created hook.
 	// Parameters:
 	// pTarget[in] Pointer to the target function.
 	// If this parameter is MH_ALL_HOOKS, all created hooks
 	// in the queue for disconnection.
-	MH_STATUS WINAPI MH_QueueDisableHook( LPVOID pTarget );
+	MH_STATUS WINAPI MH_QueueDisableHook(LPVOID pTarget);
 
 	// Applies all changes to the queue at once.
-	MH_STATUS WINAPI MH_ApplyQueued( VOID );
+	MH_STATUS WINAPI MH_ApplyQueued(VOID);
 
 	// Translates MH_STATUS to its name as a string.
-	const char *WINAPI MH_StatusToString( MH_STATUS status );
+	const char* WINAPI MH_StatusToString(MH_STATUS status);
 
 #ifdef __cplusplus
 }
