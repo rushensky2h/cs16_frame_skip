@@ -32,9 +32,9 @@ void hkSCR_UpdateScreen()
 		return;
 	}
 
-	auto oSCR_UpdateScreen = ( SCR_UpdateScreen_t ) g_pSCR_UpdateScreen;
+	auto oSCR_UpdateScreen = (SCR_UpdateScreen_t) g_pSCR_UpdateScreen;
 
-	oSCR_UpdateScreen( );
+	oSCR_UpdateScreen();
 }
 
 void ProcessAttach(HMODULE hModule)
