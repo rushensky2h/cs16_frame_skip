@@ -73,7 +73,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 bool FindModuleByName(const char* name, ModuleInfo* module)
 {
-	if (strlen(name) == 0)
+	if (!strlen(name))
 		return false;
 
 	HMODULE hModuleDll = GetModuleHandleA(name);
