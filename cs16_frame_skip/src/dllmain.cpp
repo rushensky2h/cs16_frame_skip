@@ -21,18 +21,18 @@ SCR_UpdateScreen_t g_pSCR_UpdateScreen;
 
 void hkSCR_UpdateScreen()
 {
-	static int m_nCount = 0;
+	static int count = 0;
 
 	// We skip frames as much as possible to increase the indicator
 	// The higher the value, the fewer frames
-	const int m_nSkipFrames = 1;
+	const int skip_frames = 1;
 
-	if (m_nCount <= m_nSkipFrames)
-		m_nCount++;
+	if (count <= skip_frames)
+		count++;
 
-	if (m_nCount > m_nSkipFrames)
+	if (count > skip_frames)
 	{
-		m_nCount  = 0;
+		count  = 0;
 		return;
 	}
 
